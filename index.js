@@ -1,6 +1,5 @@
 /*
   Check list
-
   In NodeJS, please write a script that takes a keyword as an argument from the command line.  
   The script would then search Google and Bing for the keyword.   
   The script will visit the top 6 search results from both Google and Bing.   
@@ -41,18 +40,22 @@ function runScrape(){
       links.each(function(index, element){
         //return the top 6 results
         if(totalResults <= 5){
+
           //get href
           var url = $(element).attr('href');
           
           //clean up returned url
           url = url.replace("/url?q=", "").split("&")[0];
-
+          
+          //return characters before /
           if(url.charAt(0) === '/'){
             return;
           }
           
+          //Increment count
           totalResults++;
 
+          //create googleSearchResults obj. storeed in an array
           googleSearchResults.push({
             title: $(element).text(),
             url: url
@@ -60,7 +63,9 @@ function runScrape(){
         }
       });
       
+      //Stringify googleSearchResults object to make it easier to read.
       var jsonData = JSON.stringify(googleSearchResults, null, 4);
+
       //write the entire scraped page to the local file system
       fs.writeFile(__dirname + '/google-output.json', jsonData, function(err){
         console.log('File successfully written! - Check your google-output.json for the output file');
@@ -79,10 +84,11 @@ function runScrape(){
 
       links.each(function(index, element){
         if(totalResults <= 5){
+
           //get href
           var url = $(element).attr('href');
-          //clean up returned url
 
+          //clean up returned url
           url = url.replace("/url?q=", "").split("&")[0];
 
           if(url.charAt(0) === '/'){
@@ -91,7 +97,7 @@ function runScrape(){
           
           totalResults++;
 
-          //push the object
+          //push the object to storage
           bingSearchResults.push({
             title: $(element).text(),
             url: url
@@ -99,12 +105,13 @@ function runScrape(){
         }
       });
       
+      //Stringify googleSearchResults object to make it easier to read.
       var jsonData = JSON.stringify(bingSearchResults, null, 4);
+
       //write the entire scraped page to the local file system
       fs.writeFile(__dirname + '/bing-output.json', jsonData, function(err){
         console.log('File successfully written! - Check your bing-output.json for the output file');
       })
-    
     } 
   });
 }
